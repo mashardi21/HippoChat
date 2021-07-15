@@ -1,0 +1,27 @@
+syntax = "proto3";
+package HippoChat;
+
+option go_package = ".;HippoChat";
+
+message User {
+    string UserName = 1;
+    string ID = 2;
+}
+
+message Message {
+    User user = 1;
+    string TimeStamp = 2;
+    string Body = 3;
+}
+
+message Connect {
+    User user = 1;
+    bool active = 2;
+}
+
+message Close{}
+
+service Broadcast {
+    rpc CreateStream(Connect) returns (stream Message);
+    rpc BroadcastMessage(Message) returns (Close);
+}
