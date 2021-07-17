@@ -1,4 +1,4 @@
-module github.com/mashardi21/HippoChat/HippoChat
+module github.com/mashardi21/HippoChat
 
 go 1.16
 
