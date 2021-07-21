@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"time"
 
 	chat "github.com/mashardi21/HippoChat/proto"
+	"github.com/mashardi21/HippoChat/settings"
 	"google.golang.org/grpc"
 )
 
@@ -53,12 +53,17 @@ func Connect(user *chat.User) error {
 }
 
 func main() {
+	setting, err := settings.Load()
+	if err != nil {
+		log.Fatalf("Error loading settings: %s", err)
+	}
+
 	timestamp := time.Now()
 	done := make(chan int)
 
-	userName := flag.String("u", "Egbog", "The username that will be used for the current session")
-	id := flag.String("i", "1", "This flag is only temporary and will not be present in future versions")
-	flag.Parse()
+	// userName := flag.String("u", "Egbog", "The username that will be used for the current session")
+	// id := flag.String("i", "1", "This flag is only temporary and will not be present in future versions")
+	// flag.Parse()
 
 	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
 
@@ -68,8 +73,8 @@ func main() {
 
 	client = chat.NewBroadcastClient(conn)
 	user := &chat.User{
-		UserName: *userName,
-		ID:       *id,
+		UserName: setting.Username,
+		ID:       setting.ID,
 	}
 
 	Connect(user)
